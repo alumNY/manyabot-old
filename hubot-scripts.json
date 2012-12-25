@@ -1,1 +1,16 @@
-["redis-brain.coffee", "tweet.coffee", "shipit.coffee"]
+[
+"redis-brain.coffee",
+"tweet.coffee",
+"shipit.coffee",
+"hashing.coffee",
+"hangman.coffee",
+"getajob.coffee",
+"auth.coffee",
+"archer.coffee",
+"alot.coffee",
+"abstract.coffee",
+"xkcd.coffee",
+"twitter_mention.coffee",
+"meme_captain.coffee",
+"karma.coffee"
+]
