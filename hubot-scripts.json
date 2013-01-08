@@ -6,12 +6,11 @@
 "hashing.coffee",
 "hangman.coffee",
 "getajob.coffee",
-"auth.coffee",
-"archer.coffee",
 "alot.coffee",
 "abstract.coffee",
 "xkcd.coffee",
 "twitter_mention.coffee",
 "meme_captain.coffee",
+"brewerydb.coffee",
 "karma.coffee"
 ]
