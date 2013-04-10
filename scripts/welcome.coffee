@@ -14,9 +14,9 @@ whoIs = (name, robot) ->
     if user.roles.length > 0
       "#{name} is #{user.roles.join(", ")}."
     else
-      "#{name} is nothing to me."
+      "#{name} is an individual and unique snowflake."
   else
-    "#{name} is nothing to me"
+    "#{name} is an individual and unique snowflake"
        
 
 
