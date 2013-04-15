@@ -21,5 +21,6 @@ module.exports = (robot) ->
       response += " <#{user.email_address}>" if user.email_address
       response += "\n"
 
+    msg.message.user.room = null
     msg.send response
 
