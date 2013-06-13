@@ -21,7 +21,7 @@ module.exports = (robot) ->
     if name is "you"
       msg.send "Who ain't I?"
     else if name is robot.name
-      msg.send "The best."
+      msg.send "The best!"
     else
       users = robot.usersForFuzzyName(name)
       if users.length is 1
