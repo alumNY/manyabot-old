@@ -24,7 +24,7 @@ class Substitution
     @lastLine[user] = line
 
   getLastLine: (user) ->
-    return @lastLine[user]
+    return if @lastLine[user]? then @lastLine[user] else ''
 
   verb: ->
      @verbs[Math.floor(Math.random() * @verbs.length)]
@@ -33,19 +33,23 @@ module.exports = (robot) ->
   substitution = new Substitution robot
   robot.hear substitution.pattern, (msg) ->
     query = msg.match[1].replace /\\(.)/g, '$1'
-    replace = msg.match[2].replace /\\(\d+)/, '$$$1'
+    replace = msg.match[2]
     flags = msg.match[3]
     lastLine = substitution.getLastLine(msg.message.user.name);
     
-    if flags == 'g'
-      queryPattern = new RegExp(query, "g");
-      response = lastLine.replace queryPattern, replace
-    else
-      queryPattern = new RegExp(query);
-      response = lastLine.replace queryPattern, replace
+    try
+      if flags == 'g'
+        queryPattern = new RegExp(query, "g");
+        response = lastLine.replace queryPattern, replace
+      else
+        queryPattern = new RegExp(query);
+        response = lastLine.replace queryPattern, replace
 
-    substitution.setLastLine(msg.message.user.name, response);
-    msg.send "#{msg.message.user.name} #{substitution.verb()}: #{response}"
+      if response? && response != '' && response != lastLine
+        substitution.setLastLine(msg.message.user.name, response);
+        msg.send "#{msg.message.user.name} #{substitution.verb()}: #{response}"
+    catch error
+      msg.send "#{msg.message.user.name}, bad regex; #{error}"
 
   robot.hear /.*/, (msg) ->
     unless substitution.pattern.test(msg.match[0])
