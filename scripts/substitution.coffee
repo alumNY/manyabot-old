@@ -33,7 +33,7 @@ module.exports = (robot) ->
   substitution = new Substitution robot
   robot.hear substitution.pattern, (msg) ->
     query = msg.match[1].replace /\\(.)/g, '$1'
-    replace = msg.match[2]
+    replace = msg.match[2].replace /\\(.)/g, '$1'
     flags = msg.match[3]
     lastLine = substitution.getLastLine(msg.message.user.name);
     
