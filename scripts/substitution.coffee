@@ -17,7 +17,7 @@ class Substitution
 
   constructor: (@robot) ->
     @lastLine = {}
-    @pattern = /^s\/([^\/\\]*(?:\\.[^\/\\]*)*)\/([^\/\\]*(?:\\.[^\/\\]*)*)\/(.*)/
+    @pattern = /^s\/([^\/\\]*(?:\\.[^\/\\]*)*)\/([^\/\\]*(?:\\.[^\/\\]*)*)(?:\/(.*))?/
     @verbs = [ "actually meant to say", "meant to say", "really meant to say" ]
 
   setLastLine: (user, line) ->
@@ -32,18 +32,14 @@ class Substitution
 module.exports = (robot) ->
   substitution = new Substitution robot
   robot.hear substitution.pattern, (msg) ->
-    query = msg.match[1].replace /\\(.)/g, '$1'
-    replace = msg.match[2].replace /\\(.)/g, '$1'
+    query = msg.match[1].replace /\\\//g, '/'
+    replace = msg.match[2].replace /\\\//g, '/'
     flags = msg.match[3]
     lastLine = substitution.getLastLine(msg.message.user.name);
     
     try
-      if flags == 'g'
-        queryPattern = new RegExp(query, "g");
-        response = lastLine.replace queryPattern, replace
-      else
-        queryPattern = new RegExp(query);
-        response = lastLine.replace queryPattern, replace
+      queryPattern = new RegExp(query, flags);
+      response = lastLine.replace queryPattern, replace
 
       if response? && response != '' && response != lastLine
         substitution.setLastLine(msg.message.user.name, response);
