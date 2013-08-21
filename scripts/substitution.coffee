@@ -8,7 +8,8 @@
 #   None
 #
 # Commands:
-#   s/<query>/<replacement>/[g]
+#   s/<query>/<replacement>/<flags> - correct yourself
+#   user: s/<query>/<replacement>/<flags> - correct someone else
 #
 # Author:
 #   wayne chang
@@ -17,7 +18,7 @@ class Substitution
 
   constructor: (@robot) ->
     @lastLine = {}
-    @pattern = /^s\/([^\/\\]*(?:\\.[^\/\\]*)*)\/([^\/\\]*(?:\\.[^\/\\]*)*)(?:\/(.*))?/
+    @pattern = /^([^\s]+)?(?:: )?s\/([^\/\\]*(?:\\.[^\/\\]*)*)\/([^\/\\]*(?:\\.[^\/\\]*)*)(?:\/(.*))?/
     @verbs = [ "actually meant to say", "meant to say", "really meant to say" ]
 
   setLastLine: (user, line) ->
@@ -32,22 +33,25 @@ class Substitution
 module.exports = (robot) ->
   substitution = new Substitution robot
   robot.hear substitution.pattern, (msg) ->
-    query = msg.match[1].replace /\\\//g, '/'
-    replace = msg.match[2].replace /\\\//g, '/'
-    flags = msg.match[3]
-    lastLine = substitution.getLastLine(msg.message.user.name);
+    target = msg.match[1]
+    query = msg.match[2].replace /\\\//g, '/'
+    replace = msg.match[3].replace /\\\//g, '/'
+    flags = msg.match[4]
     
     try
-      queryPattern = new RegExp(query, flags);
+      [prefix, user] = if target? then ["#{msg.message.user.name} thinks ", target] else ["", msg.message.user.name]
+      lastLine = substitution.getLastLine(user);
+      queryPattern = new RegExp(query, if flags? then flags else '');
       response = lastLine.replace queryPattern, replace
-
-      if response? && response != '' && response != lastLine
-        substitution.setLastLine(msg.message.user.name, response);
-        msg.send "#{msg.message.user.name} #{substitution.verb()}: #{response}"
+      
+      if response != '' && response != lastLine
+        substitution.setLastLine(msg.message.user.name, response) unless target?;
+        msg.send "#{prefix}#{user} #{substitution.verb()}: #{response}"
     catch error
       msg.send "#{msg.message.user.name}, bad regex; #{error}"
 
   robot.hear /.*/, (msg) ->
     unless substitution.pattern.test(msg.match[0])
       substitution.setLastLine(msg.message.user.name, msg.match[0])
+
 
