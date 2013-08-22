@@ -18,7 +18,7 @@ class Substitution
 
   constructor: (@robot) ->
     @lastLine = {}
-    @pattern = /^([^\s]+)?(?:: )?s\/([^\/\\]*(?:\\.[^\/\\]*)*)\/([^\/\\]*(?:\\.[^\/\\]*)*)(?:\/(.*))?/
+    @pattern = /^(?:([^\s]+)?(?:: ))?s\/([^\/\\]*(?:\\.[^\/\\]*)*)\/([^\/\\]*(?:\\.[^\/\\]*)*)(?:\/(.*))?/
     @verbs = [ "actually meant to say", "meant to say", "really meant to say" ]
 
   setLastLine: (user, line) ->
