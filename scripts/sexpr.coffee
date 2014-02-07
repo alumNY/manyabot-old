@@ -24,8 +24,8 @@ class Sexpr
 
   constructor: (@robot) ->
     @symbols = {
-      'car': (xs) -> x[0]
-      'cdr': (xs) -> x[1..]
+      'car': (xs) -> xs[0]
+      'cdr': (xs) -> xs[1..]
       '+': (x, y) -> x + y
       '-': (x, y) -> x - y
       '*': (x, y) -> x * y
